@@ -1,0 +1,4 @@
+.claude/
+build/
+dist/
+.DS_Store

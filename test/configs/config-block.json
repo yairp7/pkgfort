@@ -1,0 +1,10 @@
+{
+  "_v": 1,
+  "enabled_rules": ["min_age_days"],
+  "rules": {
+    "min_age_days": { "days": 99999 },
+    "vuln_check": {}
+  },
+"fail_open": false,
+  "allowlist": []
+}
