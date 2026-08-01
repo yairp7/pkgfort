@@ -11,7 +11,7 @@ import (
 const binName = "pkgfort"
 
 // version is overridden at release-build time via -ldflags "-X main.version=...".
-var version = "0.1.0"
+var version = "1.0.0"
 
 func main() {
 	ctx, cancel := signal.NotifyContext(

@@ -361,7 +361,7 @@ make test-docker # runs integration tests in Docker
 curl -fsSL https://raw.githubusercontent.com/yairp7/pkgfort/main/install.sh | sh
 ```
 
-Downloads a prebuilt binary for your OS/arch from the [latest release](https://github.com/yairp7/pkgfort/releases), falling back to `go install` if no matching release binary exists (e.g. on an unsupported platform) — Go must be installed for the fallback. Then runs `pkgfort install` and wires up your shell rc file automatically. Pin a version with `PKGFORT_VERSION=v0.1.0`.
+Downloads a prebuilt binary for your OS/arch from the [latest release](https://github.com/yairp7/pkgfort/releases), falling back to `go install` if no matching release binary exists (e.g. on an unsupported platform) — Go must be installed for the fallback. Then runs `pkgfort install` and wires up your shell rc file automatically. Pin a version with `PKGFORT_VERSION=v1.0.0`.
 
 **Option 2 — `go install` (no clone needed):**
 
@@ -398,7 +398,7 @@ source ~/.zshrc
 
 ## Usage
 
-After installation, `npm` and `go` commands work exactly as before. When pkgfort intercepts a fetch command, it prints a brief animated banner to stderr (`🛡️ pkgfort activated (v0.1.0) 🛡️`). Blocks are always printed to stderr; per-request progress lines require `PKGFORT_VERBOSE=1`:
+After installation, `npm` and `go` commands work exactly as before. When pkgfort intercepts a fetch command, it prints a brief animated banner to stderr (`🛡️ pkgfort activated (v1.0.0) 🛡️`). Blocks are always printed to stderr; per-request progress lines require `PKGFORT_VERBOSE=1`:
 
 ```
 $ PKGFORT_VERBOSE=1 go get github.com/aws/aws-sdk-go-v2/aws
