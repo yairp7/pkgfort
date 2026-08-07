@@ -12,7 +12,9 @@ import (
 )
 
 func initScript(binPath string) string {
+	appDir := filepath.Dir(binPath)
 	return `# ` + binName + ` shell wrappers — source this file in your shell rc
+export PATH="` + appDir + `:$PATH"
 npm() { "` + binPath + `" exec npm "$@"; }
 go()  { "` + binPath + `" exec go  "$@"; }
 `

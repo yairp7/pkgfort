@@ -68,7 +68,7 @@ pkgfort proxy --ecosystem <npm|go>    # start the proxy server (used internally 
 pkgfort proxy <rule> <cmd> [args]     # configure a rule (e.g. pkgfort proxy min_age_days set-days 14)
 pkgfort exec <tool>                   # intercept-or-passthrough wrapper (called by shell functions)
 pkgfort install                       # install shell init file and create default config
-pkgfort uninstall                     # remove shell init file and binary
+pkgfort uninstall                     # remove ~/.pkgfort and the init.sh source line from shell rc files
 pkgfort config                        # print current configuration as JSON
 pkgfort version                       # print version
 ```
@@ -281,7 +281,7 @@ cmd/
     proxy.go             # `pkgfort proxy` — proxy server + rule CLI dispatch
     exec.go              # `pkgfort exec` — intercept-or-passthrough wrapper
     install.go           # `pkgfort install` — write init.sh, config defaults, copy binary
-    uninstall.go         # `pkgfort uninstall` — remove binary and init.sh
+    uninstall.go         # `pkgfort uninstall` — remove ~/.pkgfort and strip init.sh source line from shell rc files
     config.go            # `pkgfort config` — print current config as JSON
 internal/
   proxy/
@@ -378,7 +378,7 @@ pkgfort install
 
 This:
 1. Copies the binary to `~/.pkgfort/pkgfort`
-2. Writes `~/.pkgfort/init.sh` with the shell wrapper functions (using the full binary path, no PATH change needed)
+2. Writes `~/.pkgfort/init.sh` with the shell wrapper functions (using the full binary path) and adds `~/.pkgfort` to `PATH` so the `pkgfort` command itself is directly accessible
 3. Creates `~/.pkgfort/config.json` with defaults if it doesn't exist
 4. Prints the line to add to your shell config
 
@@ -523,7 +523,7 @@ That's it — `BuildRules` filters the `all` slice by `enabled_rules`, so the ru
 ## Uninstalling
 
 ```bash
-pkgfort uninstall       # removes ~/.pkgfort/pkgfort and ~/.pkgfort/init.sh
+pkgfort uninstall
 ```
 
-Remove the `source ~/.pkgfort/init.sh` line from your `.zshrc` manually.
+Removes `~/.pkgfort` entirely (binary, `init.sh`, `config.json`, `audit.log`) and strips the `source ~/.pkgfort/init.sh` line (and its `# pkgfort` marker) from `~/.zshrc` and `~/.bashrc`. Restart your shell, or open a new terminal, to pick up the change.
