@@ -436,6 +436,16 @@ go get github.com/some/module@v1.0.0
 
 **Known limitation — runtime registry overrides:** pkgfort resolves the upstream registry once at proxy startup, from `npm_config_registry` / `GOPROXY` env vars or `.npmrc` / `go env GOPROXY`. Per-invocation flags like `npm install --registry=...` are *not* honored — npm passes the flag to the proxied npm, but the proxy itself has already bound to its own upstream. If you need a different registry, set it via env var or `.npmrc` before the command.
 
+**Known limitation — `go run`/`build`/`test` can still fetch unvalidated modules:** `NeedsProxy` (`internal/ecosystem/gomod/gomod.go`) only intercepts `get`, `install`, `mod tidy`, and `mod download`. If `go.sum` already has a hash for a dependency that isn't yet in the local module cache — a fresh clone, a CI runner, a new teammate's first build, or a cache eviction — `go run`/`build`/`test` will fetch that module's `.zip` directly from the real upstream (bypassing `GOPROXY` redirection entirely, since the proxy is never started for these subcommands). No `min_age_days` or `vuln_check` rule runs against that fetch. Verified empirically: with a `go.sum` entry present but the module absent from `GOMODCACHE`, `go run .` printed `go: downloading ...` and succeeded with no `[pkgfort]` log output and no proxy process started.
+
+**Known limitation — pkgfort process lives for the lifetime of passthrough commands:** For subcommands `NeedsProxy` doesn't intercept (`run`, `build`, `test`, etc.), `pkgfort exec` still runs the real binary as a direct child via `cmd.Run()` and blocks until it exits, so it can propagate the exit code (`cmd/pkgfort/exec.go`, `passThrough`). For a long-running foreground process started with `go run` (e.g. an HTTP/gRPC server), this means a `pkgfort exec go run ...` process sits in the process tree as the parent of `go run` for as long as the service runs — confirmed via `ps -ef`:
+```
+pkgfort exec go run .
+  └─ go run .
+       └─ <compiled binary>
+```
+This is inert (no proxy, no network interception, negligible overhead) but is visible in process listings/monitoring for the service's entire lifetime. Replacing the passthrough `cmd.Run()` with `syscall.Exec()` (process replacement instead of parenting) would eliminate the extra layer.
+
 ---
 
 ## Rules
