@@ -26,7 +26,7 @@ func (m *MinAgeDays) Commands() map[string]Command {
 			Usage: "set-days <n>    set the minimum package age in days",
 			Run: func(cfg *config.Config, args []string) error {
 				if len(args) < 1 {
-					return fmt.Errorf("usage: pkgfort proxy min_age_days set-days <n>")
+					return fmt.Errorf("usage: pkgfort config min_age_days set-days <n>")
 				}
 				n, err := strconv.Atoi(args[0])
 				if err != nil || n < 0 {

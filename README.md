@@ -65,11 +65,11 @@ npm install some-lib
 
 ```
 pkgfort proxy --ecosystem <npm|go>    # start the proxy server (used internally by the wrapper)
-pkgfort proxy <rule> <cmd> [args]     # configure a rule (e.g. pkgfort proxy min_age_days set-days 14)
 pkgfort exec <tool>                   # intercept-or-passthrough wrapper (called by shell functions)
 pkgfort install                       # install shell init file and create default config
 pkgfort uninstall                     # remove ~/.pkgfort and the init.sh source line from shell rc files
 pkgfort config                        # print current configuration as JSON
+pkgfort config <rule> <cmd> [args]    # configure a rule (e.g. pkgfort config min_age_days set-days 14)
 pkgfort version                       # print version
 ```
 
@@ -231,7 +231,7 @@ type Result struct {
 }
 ```
 
-**`Configurable`** — optional interface rules can implement to expose CLI commands via `pkgfort proxy <rule> <cmd> [args]`:
+**`Configurable`** — optional interface rules can implement to expose CLI commands via `pkgfort config <rule> <cmd> [args]`:
 
 ```go
 type Command struct {
@@ -247,7 +247,7 @@ type Configurable interface {
 `min_age_days` implements this with a `set-days <n>` command that writes to `~/.pkgfort/config.json`:
 
 ```bash
-pkgfort proxy min_age_days set-days 14
+pkgfort config min_age_days set-days 14
 # ok
 ```
 
@@ -278,11 +278,11 @@ build/                   # compiled binaries (git-ignored)
 cmd/
   pkgfort/
     main.go              # entry point, registers subcommands, wires dependencies
-    proxy.go             # `pkgfort proxy` — proxy server + rule CLI dispatch
+    proxy.go             # `pkgfort proxy` — proxy server
     exec.go              # `pkgfort exec` — intercept-or-passthrough wrapper
     install.go           # `pkgfort install` — write init.sh, config defaults, copy binary
     uninstall.go         # `pkgfort uninstall` — remove ~/.pkgfort and strip init.sh source line from shell rc files
-    config.go            # `pkgfort config` — print current config as JSON
+    config.go            # `pkgfort config` — print current config as JSON, rule CLI dispatch
 internal/
   proxy/
     proxy.go             # HTTP server, validation orchestration

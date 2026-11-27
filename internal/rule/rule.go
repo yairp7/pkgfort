@@ -21,14 +21,14 @@ type Rule interface {
 	Evaluate(ctx context.Context, pkg ecosystem.PackageInfo) (Result, error)
 }
 
-// Command is a CLI subcommand exposed by a rule via pkgfort proxy <rule> <cmd>.
+// Command is a CLI subcommand exposed by a rule via pkgfort config <rule> <cmd>.
 type Command struct {
 	Usage string
 	Run   func(cfg *config.Config, args []string) error
 }
 
 // Configurable is an optional interface rules can implement to expose CLI
-// commands accessible via `pkgfort proxy <rule> <cmd> [args]`.
+// commands accessible via `pkgfort config <rule> <cmd> [args]`.
 type Configurable interface {
 	Commands() map[string]Command
 }

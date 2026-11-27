@@ -11,7 +11,7 @@ import (
 const binName = "pkgfort"
 
 // version is overridden at release-build time via -ldflags "-X main.version=...".
-var version = "1.0.1"
+var version = "1.0.2"
 
 func main() {
 	ctx, cancel := signal.NotifyContext(
@@ -30,7 +30,7 @@ func main() {
 	case "version", "--version", "-v":
 		fmt.Println(binName + " " + version)
 	case "config":
-		runConfig()
+		runConfig(os.Args[2:])
 	case "proxy":
 		runProxy(ctx, os.Args[2:])
 	case "exec":
@@ -53,6 +53,6 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  exec       run a tool command through the proxy")
 	fmt.Fprintln(os.Stderr, "  install    install shell wrappers and default config")
 	fmt.Fprintln(os.Stderr, "  uninstall  remove shell wrappers and binary")
-	fmt.Fprintln(os.Stderr, "  config     print current configuration")
+	fmt.Fprintln(os.Stderr, "  config     print configuration, or configure a rule (config <rule> <cmd> [args])")
 	fmt.Fprintln(os.Stderr, "  version    print version")
 }
